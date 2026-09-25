@@ -1,0 +1,425 @@
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+if PlayerGui:FindFirstChild("ROT") then
+    PlayerGui.ROT:Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ROT"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = PlayerGui
+
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.new(0, 480, 0, 340)
+Main.Position = UDim2.new(0.5, -240, 0.5, -170)
+Main.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = true
+Main.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.Parent = Main
+
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(90, 60, 200)
+UIStroke.Thickness = 1.5
+UIStroke.Parent = Main
+
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 42)
+Header.BackgroundColor3 = Color3.fromRGB(28, 28, 38)
+Header.BorderSizePixel = 0
+Header.Parent = Main
+
+local HeaderCorner = Instance.new("UICorner")
+HeaderCorner.CornerRadius = UDim.new(0, 12)
+HeaderCorner.Parent = Header
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -100, 1, 0)
+Title.Position = UDim2.new(0, 15, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "ROT"
+Title.TextColor3 = Color3.fromRGB(180, 150, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 16
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 32, 0, 32)
+CloseBtn.Position = UDim2.new(1, -38, 0, 5)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+CloseBtn.Text = "×"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 120, 120)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 20
+CloseBtn.Parent = Header
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 8)
+CloseCorner.Parent = CloseBtn
+
+local MinimizeBtn = Instance.new("TextButton")
+MinimizeBtn.Size = UDim2.new(0, 32, 0, 32)
+MinimizeBtn.Position = UDim2.new(1, -74, 0, 5)
+MinimizeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+MinimizeBtn.Text = "–"
+MinimizeBtn.TextColor3 = Color3.fromRGB(200, 200, 220)
+MinimizeBtn.Font = Enum.Font.GothamBold
+MinimizeBtn.TextSize = 20
+MinimizeBtn.Parent = Header
+
+local MinCorner = Instance.new("UICorner")
+MinCorner.CornerRadius = UDim.new(0, 8)
+MinCorner.Parent = MinimizeBtn
+
+local TabBar = Instance.new("Frame")
+TabBar.Size = UDim2.new(1, -20, 0, 36)
+TabBar.Position = UDim2.new(0, 10, 0, 50)
+TabBar.BackgroundTransparency = 1
+TabBar.Parent = Main
+
+local Tabs = {"الرئيسية", "الشات", "الذكاء الاصطناعي", "الإعدادات"}
+local TabButtons = {}
+local Pages = {}
+
+for i, name in ipairs(Tabs) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 110, 0, 32)
+    btn.Position = UDim2.new(0, (i-1)*115, 0, 0)
+    btn.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(180, 180, 200)
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 13
+    btn.Parent = TabBar
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = btn
+
+    TabButtons[i] = btn
+end
+
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, -20, 1, -100)
+Content.Position = UDim2.new(0, 10, 0, 95)
+Content.BackgroundTransparency = 1
+Content.Parent = Main
+
+local HomePage = Instance.new("Frame")
+HomePage.Size = UDim2.new(1, 0, 1, 0)
+HomePage.BackgroundTransparency = 1
+HomePage.Visible = true
+HomePage.Parent = Content
+Pages[1] = HomePage
+
+local Welcome = Instance.new("TextLabel")
+Welcome.Size = UDim2.new(1, 0, 0, 40)
+Welcome.BackgroundTransparency = 1
+Welcome.Text = "مرحباً بك في ROT"
+Welcome.TextColor3 = Color3.fromRGB(200, 180, 255)
+Welcome.Font = Enum.Font.GothamBold
+Welcome.TextSize = 22
+Welcome.Parent = HomePage
+
+local Info = Instance.new("TextLabel")
+Info.Size = UDim2.new(1, 0, 0, 120)
+Info.Position = UDim2.new(0, 0, 0, 50)
+Info.BackgroundTransparency = 1
+Info.Text = "سكربت شرعي بالكامل\n\n• واجهة جميلة وسهلة\n• شات خاص\n• ذكاء اصطناعي بسيط\n• ما فيه أي شيت\n\nاضغط RightShift لإظهار أو إخفاء الواجهة"
+Info.TextColor3 = Color3.fromRGB(170, 170, 190)
+Info.Font = Enum.Font.Gotham
+Info.TextSize = 14
+Info.TextWrapped = true
+Info.TextYAlignment = Enum.TextYAlignment.Top
+Info.Parent = HomePage
+
+local ChatPage = Instance.new("Frame")
+ChatPage.Size = UDim2.new(1, 0, 1, 0)
+ChatPage.BackgroundTransparency = 1
+ChatPage.Visible = false
+ChatPage.Parent = Content
+Pages[2] = ChatPage
+
+local ChatLog = Instance.new("ScrollingFrame")
+ChatLog.Size = UDim2.new(1, 0, 1, -50)
+ChatLog.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+ChatLog.BorderSizePixel = 0
+ChatLog.ScrollBarThickness = 4
+ChatLog.CanvasSize = UDim2.new(0, 0, 0, 0)
+ChatLog.Parent = ChatPage
+
+local ChatCorner = Instance.new("UICorner")
+ChatCorner.CornerRadius = UDim.new(0, 8)
+ChatCorner.Parent = ChatLog
+
+local ChatList = Instance.new("UIListLayout")
+ChatList.Padding = UDim.new(0, 6)
+ChatList.Parent = ChatLog
+
+local ChatInput = Instance.new("TextBox")
+ChatInput.Size = UDim2.new(1, -70, 0, 36)
+ChatInput.Position = UDim2.new(0, 0, 1, -40)
+ChatInput.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+ChatInput.PlaceholderText = "اكتب رسالتك هنا..."
+ChatInput.Text = ""
+ChatInput.TextColor3 = Color3.fromRGB(220, 220, 240)
+ChatInput.Font = Enum.Font.Gotham
+ChatInput.TextSize = 14
+ChatInput.ClearTextOnFocus = false
+ChatInput.Parent = ChatPage
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 8)
+InputCorner.Parent = ChatInput
+
+local SendBtn = Instance.new("TextButton")
+SendBtn.Size = UDim2.new(0, 60, 0, 36)
+SendBtn.Position = UDim2.new(1, -60, 1, -40)
+SendBtn.BackgroundColor3 = Color3.fromRGB(90, 60, 200)
+SendBtn.Text = "إرسال"
+SendBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+SendBtn.Font = Enum.Font.GothamBold
+SendBtn.TextSize = 13
+SendBtn.Parent = ChatPage
+
+local SendCorner = Instance.new("UICorner")
+SendCorner.CornerRadius = UDim.new(0, 8)
+SendCorner.Parent = SendBtn
+
+local AIPage = Instance.new("Frame")
+AIPage.Size = UDim2.new(1, 0, 1, 0)
+AIPage.BackgroundTransparency = 1
+AIPage.Visible = false
+AIPage.Parent = Content
+Pages[3] = AIPage
+
+local AILog = Instance.new("ScrollingFrame")
+AILog.Size = UDim2.new(1, 0, 1, -50)
+AILog.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+AILog.BorderSizePixel = 0
+AILog.ScrollBarThickness = 4
+AILog.CanvasSize = UDim2.new(0, 0, 0, 0)
+AILog.Parent = AIPage
+
+local AICorner = Instance.new("UICorner")
+AICorner.CornerRadius = UDim.new(0, 8)
+AICorner.Parent = AILog
+
+local AIList = Instance.new("UIListLayout")
+AIList.Padding = UDim.new(0, 6)
+AIList.Parent = AILog
+
+local AIInput = Instance.new("TextBox")
+AIInput.Size = UDim2.new(1, -70, 0, 36)
+AIInput.Position = UDim2.new(0, 0, 1, -40)
+AIInput.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+AIInput.PlaceholderText = "اسأل الذكاء الاصطناعي..."
+AIInput.Text = ""
+AIInput.TextColor3 = Color3.fromRGB(220, 220, 240)
+AIInput.Font = Enum.Font.Gotham
+AIInput.TextSize = 14
+AIInput.ClearTextOnFocus = false
+AIInput.Parent = AIPage
+
+local AIInputCorner = Instance.new("UICorner")
+AIInputCorner.CornerRadius = UDim.new(0, 8)
+AIInputCorner.Parent = AIInput
+
+local AISend = Instance.new("TextButton")
+AISend.Size = UDim2.new(0, 60, 0, 36)
+AISend.Position = UDim2.new(1, -60, 1, -40)
+AISend.BackgroundColor3 = Color3.fromRGB(90, 60, 200)
+AISend.Text = "اسأل"
+AISend.TextColor3 = Color3.fromRGB(255, 255, 255)
+AISend.Font = Enum.Font.GothamBold
+AISend.TextSize = 13
+AISend.Parent = AIPage
+
+local AISendCorner = Instance.new("UICorner")
+AISendCorner.CornerRadius = UDim.new(0, 8)
+AISendCorner.Parent = AISend
+
+local SettingsPage = Instance.new("Frame")
+SettingsPage.Size = UDim2.new(1, 0, 1, 0)
+SettingsPage.BackgroundTransparency = 1
+SettingsPage.Visible = false
+SettingsPage.Parent = Content
+Pages[4] = SettingsPage
+
+local SettingsTitle = Instance.new("TextLabel")
+SettingsTitle.Size = UDim2.new(1, 0, 0, 30)
+SettingsTitle.BackgroundTransparency = 1
+SettingsTitle.Text = "الإعدادات"
+SettingsTitle.TextColor3 = Color3.fromRGB(200, 180, 255)
+SettingsTitle.Font = Enum.Font.GothamBold
+SettingsTitle.TextSize = 18
+SettingsTitle.Parent = SettingsPage
+
+local KeybindLabel = Instance.new("TextLabel")
+KeybindLabel.Size = UDim2.new(1, 0, 0, 25)
+KeybindLabel.Position = UDim2.new(0, 0, 0, 45)
+KeybindLabel.BackgroundTransparency = 1
+KeybindLabel.Text = "مفتاح إظهار وإخفاء الواجهة : RightShift"
+KeybindLabel.TextColor3 = Color3.fromRGB(170, 170, 190)
+KeybindLabel.Font = Enum.Font.Gotham
+KeybindLabel.TextSize = 14
+KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
+KeybindLabel.Parent = SettingsPage
+
+local Note = Instance.new("TextLabel")
+Note.Size = UDim2.new(1, 0, 0, 80)
+Note.Position = UDim2.new(0, 0, 0, 90)
+Note.BackgroundTransparency = 1
+Note.Text = "ملاحظات :\n• الشات خاص ويظهر عندك فقط\n• الذكاء الاصطناعي بسيط\n• السكربت شرعي وآمن بالكامل"
+Note.TextColor3 = Color3.fromRGB(150, 150, 170)
+Note.Font = Enum.Font.Gotham
+Note.TextSize = 13
+Note.TextWrapped = true
+Note.TextYAlignment = Enum.TextYAlignment.Top
+Note.Parent = SettingsPage
+
+local function SwitchTab(index)
+    for i, page in ipairs(Pages) do
+        page.Visible = (i == index)
+        if i == index then
+            TabButtons[i].BackgroundColor3 = Color3.fromRGB(90, 60, 200)
+            TabButtons[i].TextColor3 = Color3.fromRGB(255, 255, 255)
+        else
+            TabButtons[i].BackgroundColor3 = Color3.fromRGB(35, 35, 48)
+            TabButtons[i].TextColor3 = Color3.fromRGB(180, 180, 200)
+        end
+    end
+end
+
+for i, btn in ipairs(TabButtons) do
+    btn.MouseButton1Click:Connect(function()
+        SwitchTab(i)
+    end)
+end
+
+local function AddChatMessage(text, isMe)
+    local msg = Instance.new("TextLabel")
+    msg.Size = UDim2.new(1, -16, 0, 0)
+    msg.BackgroundTransparency = 1
+    msg.Text = (isMe and "أنت : " or "مستخدم : ") .. text
+    msg.TextColor3 = isMe and Color3.fromRGB(180, 150, 255) or Color3.fromRGB(200, 200, 220)
+    msg.Font = Enum.Font.Gotham
+    msg.TextSize = 13
+    msg.TextWrapped = true
+    msg.TextXAlignment = Enum.TextXAlignment.Left
+    msg.Parent = ChatLog
+    msg.Size = UDim2.new(1, -16, 0, msg.TextBounds.Y + 8)
+    ChatLog.CanvasSize = UDim2.new(0, 0, 0, ChatList.AbsoluteContentSize.Y + 20)
+    ChatLog.CanvasPosition = Vector2.new(0, ChatLog.CanvasSize.Y.Offset)
+end
+
+SendBtn.MouseButton1Click:Connect(function()
+    local text = ChatInput.Text
+    if text and text \~= "" then
+        AddChatMessage(text, true)
+        ChatInput.Text = ""
+    end
+end)
+
+ChatInput.FocusLost:Connect(function(enter)
+    if enter then
+        local text = ChatInput.Text
+        if text and text \~= "" then
+            AddChatMessage(text, true)
+            ChatInput.Text = ""
+        end
+    end
+end)
+
+local AIResponses = {
+    ["مرحبا"] = "أهلاً وسهلاً ، كيف بقدر أساعدك ؟",
+    ["هلا"] = "هلا فيك ، شو بتحتاج ؟",
+    ["كيفك"] = "تمام الحمدلله ، وأنت ؟",
+    ["شكرا"] = "العفو ، أي خدمة تانية ؟",
+    ["rot"] = "أنا ROT ، سكربت شرعي وجميل",
+    ["مساعدة"] = "اكتب أي سؤال وأنا برد عليك",
+    ["باي"] = "مع السلامة ، استمتع باللعبة"
+}
+
+local function GetAIResponse(input)
+    input = string.lower(input)
+    for key, reply in pairs(AIResponses) do
+        if string.find(input, key) then
+            return reply
+        end
+    end
+    return "ما فهمت سؤالك ، جرب تكتب بطريقة ثانية أو اكتب مساعدة"
+end
+
+local function AddAIMessage(text, isUser)
+    local msg = Instance.new("TextLabel")
+    msg.Size = UDim2.new(1, -16, 0, 0)
+    msg.BackgroundTransparency = 1
+    msg.Text = (isUser and "أنت : " or "ROT : ") .. text
+    msg.TextColor3 = isUser and Color3.fromRGB(180, 150, 255) or Color3.fromRGB(120, 220, 180)
+    msg.Font = Enum.Font.Gotham
+    msg.TextSize = 13
+    msg.TextWrapped = true
+    msg.TextXAlignment = Enum.TextXAlignment.Left
+    msg.Parent = AILog
+    msg.Size = UDim2.new(1, -16, 0, msg.TextBounds.Y + 8)
+    AILog.CanvasSize = UDim2.new(0, 0, 0, AIList.AbsoluteContentSize.Y + 20)
+    AILog.CanvasPosition = Vector2.new(0, AILog.CanvasSize.Y.Offset)
+end
+
+AISend.MouseButton1Click:Connect(function()
+    local text = AIInput.Text
+    if text and text \~= "" then
+        AddAIMessage(text, true)
+        local reply = GetAIResponse(text)
+        task.wait(0.4)
+        AddAIMessage(reply, false)
+        AIInput.Text = ""
+    end
+end)
+
+AIInput.FocusLost:Connect(function(enter)
+    if enter then
+        local text = AIInput.Text
+        if text and text \~= "" then
+            AddAIMessage(text, true)
+            local reply = GetAIResponse(text)
+            task.wait(0.4)
+            AddAIMessage(reply, false)
+            AIInput.Text = ""
+        end
+    end
+end)
+
+local minimized = false
+CloseBtn.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+MinimizeBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    Content.Visible = not minimized
+    TabBar.Visible = not minimized
+    Main.Size = minimized and UDim2.new(0, 480, 0, 42) or UDim2.new(0, 480, 0, 340)
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.RightShift then
+        Main.Visible = not Main.Visible
+    end
+end)
+
+AddChatMessage("مرحباً بك في الشات الخاص", false)
+AddAIMessage("أهلاً ، أنا ROT اسألني أي شيء", false)
